@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=100%, initial-scale=1.0">
+	<title>EChartsDemo</title>
+	<link rel="stylesheet" href="./custom.css">
+	<script type="text/javascript" src="./echarts.js"></script>
+	<script type="text/javascript" src="./jquery-3.6.0.js"></script>
+</head>
+<body>
+	<div>
+		<!-- 侧边栏 -->
+		<nav class="sidebar">
+			<ul>
+				<li><a href="./demo/bar_line.html" target="my-iframe">柱状/条形图_折线/面积图</a></li>
+				<li><a href="./demo/pie.html" target="my-iframe">饼图</a></li>
+				<li><a href="./demo/sunburst.html" target="my-iframe">旭日图</a></li>
+				<li><a href="./demo/asyncLoadData.html" target="my-iframe">异步加载数据</a></li>
+				<li><a href="./demo/dataset.html" target="my-iframe">数据集dataset</a></li>
+				<li><a href="./demo/dataZoom.html" target="my-iframe">数据区域缩放组件-dataZoom</a></li>
+				<li><a href="./demo/mediaQuery.html" target="my-iframe">ECharts响应式</a></li>
+				<li><a href="./demo/events.html" target="my-iframe">事件处理</a></li>
+			</ul>
+		</nav>
+		<!-- 内容 -->
+		<content class="content">
+			<iframe src="./demo/bar_line.html" frameborder="0" name="my-iframe" height='100%' width='100%'></iframe>
+		</content>
+	</div>
+</body>
+<script type="text/javascript">
+	function toChildValue(){
+        return echarts;
+    }
+    function loadJq(){
+    	return $;
+    }
+</script>
+</html>

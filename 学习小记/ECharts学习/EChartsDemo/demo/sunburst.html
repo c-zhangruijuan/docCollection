@@ -1,0 +1,93 @@
+<!-- 旭日图 -->
+<div id='main' style="width:600px;height:400px;"></div>
+<script type="text/javascript">
+	var echarts = window.parent.toChildValue();
+	var myEchars = echarts.init(document.getElementById('main'));
+	var option = {
+		title:{text:'旭日图'},
+		series:{
+			type:'sunburst',
+			highlightPolicy: 'descendant', // 鼠标移动到某扇形块时，高亮相关块。
+			// 'descendant'（默认值）：高亮鼠标移动所在扇形块与其后代元素；
+			// 'ancestor'：高亮鼠标所在扇形块与其祖先元素；
+			// 'self'：仅高亮鼠标所在扇形块；
+			// 'none'：不会淡化（downplay）其他元素。
+			data:[{
+				name:"A",
+				value:10,
+				children:[{
+					name:"A1",
+					value:5,
+					// 该设置优先级最高，
+					itemStyle:{
+						color:'pink'
+					},
+					children:[{
+						name:'A1_1',
+						value:2
+					},{
+						name:'A1_2',
+						value:2
+					}]
+				},{
+					name:'A2',
+					value:3
+				}]
+			},{
+				name:'B',
+				value:5
+			},{
+				name:'C',
+				value:5,
+				children:[{
+					name:'C1',
+					value:3
+				},{
+					name:'C2',
+					value:3
+				}],
+				itemStyle:{color:'#eee'}
+			}],
+			// 若数据层和levels配置项，存在未被覆盖到的元素，则显示该配置项的颜色信息。该项表示整个旭日图的样式信息
+			itemStyle:{
+				color:'grey',
+			},
+			// 该项配置鼠标所在的扇形块的样式
+			emphasis: {
+				itemStyle:{
+		        	color: 'chocolate'
+				}
+		    },
+		    // 该项配置鼠标所在块的相关联块的样式
+		    highlight: {
+		    	itemStyle:{
+		        	color: 'bisque'
+		    	}
+		    },
+		    // 其余未和鼠标选中块相关联的其他块的样式
+		    downplay: {
+		    	itemStyle:{
+		        	color: 'beige'
+		    	}
+		    },
+			levels:[{
+				// 留给数据下钻的节点属性
+			},{
+				// 该项设置了内层图形的颜色信息，即A/B/C层，若存在series.data.itemStyle设置（如C），则该样式会被覆盖，即在数据层设置的优先级更高
+				itemStyle:{color:'lightblue'}
+			},{
+				// 该项设置了第二层图形的颜色信息，即A1/A2/C1/C2，与内层一样，若存在series.data.itemStyle设置（如A1），则该样式会被覆盖
+				// itemStyle:{color:'red'}
+			},{
+				// 该项设置了第三层图形的颜色信息
+				itemStyle:{color:'cadetblue'}
+			}],
+            radius: ['10%', '90%'], // 【内半径，外半径】
+			/*label: {
+                rotate: 'radial' // 'radial' 表示径向旋转(顺时针)、'tangential' 表示切向旋转（逆时针）
+            }*/
+		},
+		tooltip:{},
+	}
+	myEchars.setOption(option);
+</script>

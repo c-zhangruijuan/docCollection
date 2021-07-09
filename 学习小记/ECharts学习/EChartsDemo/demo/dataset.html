@@ -1,0 +1,175 @@
+<!-- 数据集 -->
+<div id="main" style="width:600px;height:400px;"></div>
+<button onclick="changeOption()">使用seriesLayoutBy属性来配置数据是使用列显示还是按行显示。</button>
+<!-- 使用 series.encode 属性将对应的数据映射到坐标轴（如 X、Y 轴） -->
+<div id="mains" style="width:600px;height:400px;"></div>
+<div>------分隔线------视觉通道（颜色尺寸等的映射）</div>
+<div id="colorSet" style="width:600px;height:400px;"></div>
+<script type="text/javascript">
+	var echarts = window.parent.toChildValue();
+	var myEcharts = echarts.init(document.getElementById('main'));
+	var option = {
+	    legend: {}, //图例 默认情况下图例对应dataset的第一行数据除第一列以外的其他列
+	    tooltip: {}, // 提示
+	    dataset: {
+	        // 提供一份数据。
+	        source: [
+	            ['product', '2015', '2016', '2017'],
+	            ['Matcha Latte', 43.3, 85.8, 93.7],
+	            ['Milk Tea', 83.1, 73.4, 55.1],
+	            ['Cheese Cocoa', 86.4, 65.2, 82.5],
+	            ['Walnut Brownie', 72.4, 53.9, 39.1]
+	        ]
+	    },
+	    /*dataset: { // 与上方代码展示一样
+	        // 这里指定了维度名的顺序，从而可以利用默认的维度到坐标轴的映射。
+	        // 如果不指定 dimensions，也可以通过指定 series.encode 完成映射，参见后文。
+	        dimensions: ['product', '2015', '2016', '2017'],
+	        source: [
+	            {product: 'Matcha Latte', '2015': 43.3, '2016': 85.8, '2017': 93.7},
+	            {product: 'Milk Tea', '2015': 83.1, '2016': 73.4, '2017': 55.1},
+	            {product: 'Cheese Cocoa', '2015': 86.4, '2016': 65.2, '2017': 82.5},
+	            {product: 'Walnut Brownie', '2015': 72.4, '2016': 53.9, '2017': 39.1}
+	        ]
+	    },*/
+	    // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+	    xAxis: {type: 'category'},
+	    // 声明一个 Y 轴，数值轴。
+	    yAxis: {},
+	    // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
+	    series: [
+	        {type: 'bar'},
+	        {type: 'bar'},
+	        {type: 'bar'}
+	    ]
+	}
+	var sum = 1;
+	myEcharts.setOption(option);
+	function changeOption() {
+		var option1 = {
+		    legend: {},
+		    tooltip: {},
+		    dataset: {
+		        source: [
+		            ['product', '2012', '2013', '2014', '2015'],
+		            ['Matcha Latte', 41.1, 30.4, 65.1, 53.3],
+		            ['Milk Tea', 86.5, 92.1, 85.7, 83.1],
+		            ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4]
+		        ]
+		    },
+		    xAxis: [
+		        {type: 'category', gridIndex: 0},
+		        {type: 'category', gridIndex: 1}
+		    ],
+		    yAxis: [
+		        {gridIndex: 0},
+		        {gridIndex: 1}
+		    ],
+		    grid: [
+		        {bottom: '55%'},
+		        {top: '55%'}
+		    ],
+		    series: [
+		        // 这几个系列会在第一个直角坐标系中，每个系列对应到 dataset 的每一行。
+		        {type: 'bar', seriesLayoutBy: 'row'},
+		        {type: 'bar', seriesLayoutBy: 'row'},
+		        {type: 'bar', seriesLayoutBy: 'row'},
+		        // 这几个系列会在第二个直角坐标系中，每个系列对应到 dataset 的每一列。
+		        {type: 'bar', xAxisIndex: 1, yAxisIndex: 1},
+		        {type: 'bar', xAxisIndex: 1, yAxisIndex: 1},
+		        {type: 'bar', xAxisIndex: 1, yAxisIndex: 1},
+		        {type: 'bar', xAxisIndex: 1, yAxisIndex: 1}
+		    ]
+		}
+		myEcharts.setOption(sum%2==1?option1:option);
+		sum++;
+	}
+	// 文件中第二个图表
+	var mainsEcharts = echarts.init(document.getElementById('mains'));
+	mainsEcharts.setOption({
+		dataset: {
+	        source: [
+	            ['score', 'amount', 'product'],
+	            [89.3, 58212, 'Matcha Latte'],
+	            [57.1, 78254, 'Milk Tea'],
+	            [74.4, 41032, 'Cheese Cocoa'],
+	            [50.1, 12755, 'Cheese Brownie'],
+	            [89.7, 20145, 'Matcha Cocoa'],
+	            [68.1, 79146, 'Tea'],
+	            [19.6, 91852, 'Orange Juice'],
+	            [10.6, 101852, 'Lemon Juice'],
+	            [32.7, 20112, 'Walnut Brownie']
+	        ]
+	    },
+	    grid: {
+	    	containLabel: true // grid 区域是否包含坐标轴的刻度标签。（用于避免坐标轴上名称过长导致溢出现象）
+	    },
+	    tooltip:{}, //展示提示信息需配置该项
+	    xAxis: {},
+	    yAxis: {type: 'category'},
+	    series: [
+	        {
+	            type: 'bar',
+	            // 配置X、Y轴分别对应的数据
+	            encode: {
+	                // 将 "amount" 列映射到 X 轴。
+	                // x: 'amount',
+	                x:'score',
+	                // 将 "product" 列映射到 Y 轴。
+	                y: 'product',
+	                tooltip: ['product', 'score']
+	            }
+	        },{
+	        	type:'line',
+	        	name:'amount',
+	        	encode: {
+	                y: 'product'
+	            }
+	        }
+	    ]
+	});
+	// 文件中第三个图表 通过配置visualMap属性实现颜色区分对应展示不同的分数
+	var colorSet = echarts.init(document.getElementById('colorSet'));
+	colorSet.setOption({
+	    dataset: {
+	        source: [
+	            ['score', 'amount', 'product'],
+	            [89.3, 58212, 'Matcha Latte'],
+	            [57.1, 78254, 'Milk Tea'],
+	            [74.4, 41032, 'Cheese Cocoa'],
+	            [50.1, 12755, 'Cheese Brownie'],
+	            [89.7, 20145, 'Matcha Cocoa'],
+	            [68.1, 79146, 'Tea'],
+	            [19.6, 91852, 'Orange Juice'],
+	            [10.6, 101852, 'Lemon Juice'],
+	            [32.7, 20112, 'Walnut Brownie']
+	        ]
+	    },
+	    grid: {containLabel: true},
+	    xAxis: {name: 'amount'},
+	    yAxis: {type: 'category',name:'product'},
+	    visualMap: {
+	        orient: 'horizontal',
+	        left: 'center',
+	        min: 10,
+	        max: 100,
+	        text: ['High Score', 'Low Score'],
+	        // 将score列映射到颜色
+	        dimension: 0,
+	        inRange: {
+	            color: ['#D7DA8B', '#E15457']
+	        }
+	    },
+	    series: [
+	        {
+	            type: 'bar',
+	            encode: {
+	                // 将"amount"列映射到x轴
+	                x: 'amount',
+	                // 将"product"列映射到y轴
+	                y: 'product'
+	            }
+	        }
+	    ]
+	})
+</script>

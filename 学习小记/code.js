@@ -249,3 +249,42 @@ const imgLazyLoad = () => {
   })()
 }
 window.addEventListener('scroll',imgLazyLoad);
+// 节流 应用场景：搜索输入
+function throttle(func,delay=500) {
+	let last = 0;
+	return function(...args){
+		let now = +new Date();
+		if (now - last > delay) {
+			last = now;
+			func.call(this,args);
+		}
+	}
+}
+// 防抖 应用场景：滚动、点击登录、注册、支付等按钮时
+function debounce(func,delay=500){
+	let timer = null;
+	return function (...args) {
+		if (timer) {clearTimeout(timer)}
+		timer = setTimeout(()=>{
+			func.call(this,timer);
+		},delay)
+	}
+}
+// 加强版防抖 节流与防抖函数合并
+function debounce1(func,delay=500){
+	let last = 0,timer = null;
+	return function (...args) {
+		let now = +new Date();
+		if (now - last < delay) {
+			if (timer) {clearTimeout(timer);}
+			timer = setTimeout(()=>{
+				last = now;
+				func.call(this,arg);
+			},delay)
+		} else {
+			// 若当前时间减去上次触发函数时间达到了指定延迟执行时间，默认调用一次
+			last = now;
+			func.call(this,args);
+		}
+	}
+}

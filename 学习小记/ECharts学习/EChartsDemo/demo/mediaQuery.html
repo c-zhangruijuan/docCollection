@@ -1,0 +1,207 @@
+<!-- ECharts响应式 类似css Media Query -->
+<div id="main" style="width:600px;height:400px;"></div>
+<script type="text/javascript" src="../jquery-3.6.0.js"></script>
+<script type="text/javascript">
+	const echarts = window.parent.toChildValue();
+	var myCharts = echarts.init(document.getElementById('main'));
+	myCharts.showLoading();
+	$.when(
+        $.getScript('/static/js/timelineGDP.js'),
+        $.getScript('../js/draggable.js')
+    ).done(function () {
+	    draggable.init(
+	        $('div[_echarts_instance_]')[0],
+	        myCharts,
+	        {
+	            width: 700,
+	            height: 400,
+	            throttle: 70 // 节流 时间
+	        }
+	    );
+
+   		myCharts.hideLoading();
+
+	    option = {
+	        baseOption: {
+	            title : { // 标题
+	                text: '南丁格尔玫瑰图', // 主标题
+	                subtext: '纯属虚构', // 副标题
+	                left:'center' // 标题位置：水平居中
+	            },
+	            // 提示信息
+	            tooltip : {
+	                trigger: 'item', // 触发类型，'item'：数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。'axis'：坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。'none'：什么都不触发
+	                formatter: "{a} <br/>{b} : {c} ({d}%)" // 提示信息格式：{a}系列名称；{b}数据项名称{c}数值{d}百分比
+	            },
+	            // 图例组件
+	            legend: {
+	                data:['rose1','rose2','rose3','\n','rose4','rose5','rose6','rose7','rose8'] // ''和'/n'会被认作换行符
+	            },
+	            // 工具栏
+	            toolbox: {
+	                show : true, // 是否显示工具栏组件
+	                // 各工具配置项
+	                feature : {
+	                    mark : {show: true}, // 自定义工具栏 mark为自定义名称
+	                    dataView : {show: true, readOnly: false}, // 数据视图工具 readOnly：是否不可编辑（只读）。
+	                    // 动态类型切换
+	                    magicType : {
+	                        show: true, // 是否展示该工具
+	                        type: ['pie', 'funnel']
+	                    },
+	                    // 配置项还原
+	                    restore : {show: true},
+	                    // 保存为图片
+	                    saveAsImage : {show: true}
+	                }
+	            },
+	            // 
+	            calculable : true,
+	            // 系列列表
+	            series : [
+	                {
+	                    name:'半径模式', // 系列名称，用于tooltip的显示，legend 的图例筛选，在 setOption 更新数据和配置项时用于指定对应的系列。
+	                    type:'pie', // 系列类型，pie为饼图
+	                    roseType : 'radius', // 是否展示成南丁格尔图，通过半径区别数据大小，'radius' 扇区圆心角展现数据的百分比，半径展现数据的大小。'area' 所有扇区圆心角相同，仅通过半径展现数据大小。
+	                    // 饼图上的文本标签
+	                    label: {
+	                        normal: {
+	                            show: false // 不显示
+	                        },
+	                        emphasis: {
+	                            show: true
+	                        }
+	                    },
+	                    // 饼图标签上的视觉引导线，在 label 位置 设置为'outside'的时候会显示视觉引导线，label.position默认为'outside'
+	                    lableLine: {
+	                        normal: {
+	                            show: false
+	                        },
+	                        emphasis: {
+	                            show: true
+	                        }
+	                    },
+	                    data:[
+	                        {value:10, name:'rose1'},
+	                        {value:5, name:'rose2'},
+	                        {value:15, name:'rose3'},
+	                        {value:25, name:'rose4'},
+	                        {value:20, name:'rose5'},
+	                        {value:35, name:'rose6'},
+	                        {value:30, name:'rose7'},
+	                        {value:40, name:'rose8'}
+	                    ]
+	                },
+	                {
+	                    name:'面积模式',
+	                    type:'pie',
+	                    roseType : 'area', // 是否展示成南丁格尔图，通过半径区别数据大小，'radius' 扇区圆心角展现数据的百分比，半径展现数据的大小。'area' 所有扇区圆心角相同，仅通过半径展现数据大小。
+	                    data:[
+	                        {value:10, name:'rose1'},
+	                        {value:5, name:'rose2'},
+	                        {value:15, name:'rose3'},
+	                        {value:25, name:'rose4'},
+	                        {value:20, name:'rose5'},
+	                        {value:35, name:'rose6'},
+	                        {value:30, name:'rose7'},
+	                        {value:40, name:'rose8'}
+	                    ]
+	                }
+	            ]
+	        },
+	        // 自适应
+	        media: [ // 这里定义了 media query 的逐条规则。
+	            {
+	            	// 这条里没有写规则，表示『默认』，即所有规则都不满足时，采纳这个option。
+	                option: {
+	                    legend: {
+	                        right: 'center',
+	                        bottom: 0,
+	                        orient: 'horizontal'
+	                    },
+	                    series: [
+	                        {
+	                            radius: [20, '50%'],
+	                            center: ['25%', '50%']
+	                        },
+	                        {
+	                            radius: [30, '50%'],
+	                            center: ['75%', '50%']
+	                        }
+	                    ]
+	                }
+	            },
+	            {
+	                query: {
+	                    minAspectRatio: 1 // 当长宽比大于1时
+	                },
+	                option: {
+	                    legend: {
+	                        right: 'center', // 图例放在底部中间
+	                        bottom: 0,
+	                        orient: 'horizontal' // 图例横向布局
+	                    },
+	                    series: [ // 两个饼图左右布局
+	                        {
+	                            radius: [20, '50%'],
+	                            center: ['25%', '50%']
+	                        },
+	                        {
+	                            radius: [30, '50%'],
+	                            center: ['75%', '50%']
+	                        }
+	                    ]
+	                }
+	            },
+	            {
+	                query: {
+	                    maxAspectRatio: 1 // 当长宽比小于1时
+	                },
+	                option: {
+	                    legend: {
+	                        right: 'center',
+	                        bottom: 0,
+	                        orient: 'horizontal'
+	                    },
+	                    series: [ // 两个饼图上下布局
+	                        {
+	                            radius: [20, '50%'], // 内半径，外半径
+	                            center: ['50%', '30%'] // x,y
+	                        },
+	                        {
+	                            radius: [30, '50%'],
+	                            center: ['50%', '70%']
+	                        }
+	                    ]
+	                }
+	            },
+	            {
+	                query: {
+	                    maxWidth: 500 // 当容器宽度小于500px时
+	                },
+	                option: {
+	                    legend: {
+	                        right: 10, // 图例放在右侧中间
+	                        top: '15%',
+	                        orient: 'vertical' // 图例纵向布局
+	                    },
+	                    // 两个饼图上下布局
+	                    series: [
+	                        {
+	                            radius: [20, '50%'],
+	                            center: ['50%', '30%']
+	                        },
+	                        {
+	                            radius: [30, '50%'],
+	                            center: ['50%', '75%']
+	                        }
+	                    ]
+	                }
+	            }
+	        ]
+	    };
+	    myCharts.setOption(option);
+   	})
+</script>
+<!-- 多个 query 被满足时的优先级
+注意，可以有多个 query 同时被满足，会都被 mergeOption，定义在后的后被 merge（即优先级更高）。 -->

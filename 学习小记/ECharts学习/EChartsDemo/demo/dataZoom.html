@@ -1,0 +1,118 @@
+<!-- 交互组件之缩放 通过散点图展示 -->
+<div id="main" style="width:600px;height:400px"></div>
+<script type="text/javascript">
+	var echarts = window.parent.toChildValue();
+	var myEchars = echarts.init(document.getElementById('main'));
+	var data1 = [];
+	var data2 = [];
+	var data3 = [];
+
+	var random = function (max) {
+	    return (Math.random() * max).toFixed(3);
+	};
+	// 随机生成三组数据 生成的最终数据格式为：[[x,y,r],[x1,y1,r1]...] 对应散点图x轴位置，y轴位置，r半径大小
+	for (var i = 0; i < 500; i++) {
+	    data1.push([random(15), random(10), random(1)]);
+	    data2.push([random(10), random(10), random(1)]);
+	    data3.push([random(15), random(10), random(1)]);
+	}
+
+	var option = {
+		animation:true, // 是否应用动画
+		legend: {
+	        data: ['scatter', 'scatter2', 'scatter3']
+	    }, // 图例
+	    tooltip: {
+	    	// formatter:'{a},{c}' // 自定义提示框内容
+    	},// 展示提示信息
+    	xAxis: {
+            type: 'value',
+            min: 'dataMin', // x坐标轴起始点为当前展示图表数据中最小值
+            max: 'dataMax', // x坐标轴终止点为当前展示图表数据中最大值
+            splitLine: {
+                show: true // 网格线是否展示
+            }
+        },
+        yAxis: {
+            type: 'value',
+            min: 'dataMin',
+            max: 'dataMax',
+            splitLine: {
+                show: true
+            }
+        },
+        // 缩放配置
+        dataZoom: [
+            {
+                type: 'slider', // 通过dataZoom组件控制缩放 默认控制x轴
+                show: true, // 是否在视图底部展示dataZoom组件
+                xAxisIndex: [0], // 表示这个dataZoom组件控制第一个xAxis 在本例中由于xAxis只有一个，故只能取[0]或0，该属性取值可以为number|Array
+                start: 1, // 可视区域在整个视图1%的位置开始
+                end: 35 // 可视区域在整个视图35%的位置开始 剩余部分就可通过缩放来查看
+            },
+            {
+                type: 'slider',
+                show: true,
+                yAxisIndex: [0], // 表示这个dataZoom组件控制第一个yAxis
+                left: '93%', // dataZoom组件在图表中的位置 该例在距图表左侧93%的位置，不能设为100%(会被遮挡住)
+                start: 29,
+                end: 36
+            },
+            {
+                type: 'inside', // 通过鼠标滚轮缩放|在坐标系中直接拖动
+                xAxisIndex: [0],
+                start: 1,
+                end: 35
+            },
+            {
+                type: 'inside',
+                yAxisIndex: [0],
+                start: 29,
+                end: 36
+            }
+        ],
+        series: [
+	        {
+	            name: 'scatter', // 对应legend配置的图例
+	            type: 'scatter', // 散点图
+	            itemStyle: {
+	                normal: {
+	                    opacity: 0.8
+	                }
+	            },
+	            // 图形大小
+	            symbolSize: function (val) {
+	                return val[2] * 40; // 取data1中数组下标为2的值乘以40
+	            },
+	            data: data1
+	        },
+	        {
+	            name: 'scatter2',
+	            type: 'scatter',
+	            itemStyle: {
+	                normal: {
+	                    opacity: 0.8
+	                }
+	            },
+	            symbolSize: function (val) {
+	                return val[2] * 40;
+	            },
+	            data: data2
+	        },
+	        {
+	            name: 'scatter3',
+	            type: 'scatter',
+	            itemStyle: {
+	                normal: {
+	                    opacity: 0.8,
+	                }
+	            },
+	            symbolSize: function (val) {
+	                return val[2] * 40;
+	            },
+	            data: data3
+	        }
+	    ]
+	}
+	myEchars.setOption(option);
+</script>
